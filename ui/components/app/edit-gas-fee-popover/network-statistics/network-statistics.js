@@ -5,6 +5,7 @@ import {
   FONT_WEIGHT,
   TYPOGRAPHY,
 } from '../../../../helpers/constants/design-system';
+import { roundToDecimalPlacesRemovingExtraZeroes } from '../../../../helpers/utils/util';
 import { useGasFeeContext } from '../../../../contexts/gasFee';
 import I18nValue from '../../../ui/i18n-value';
 import Typography from '../../../ui/typography/typography';
@@ -29,10 +30,12 @@ const NetworkStatistics = () => {
       <div className="network-statistics__info">
         <div className="network-statistics__info__field">
           <span className="network-statistics__info__field-data">
-            <BaseFeeTooltip>
-              {gasFeeEstimates?.estimatedBaseFee &&
-                `${gasFeeEstimates?.estimatedBaseFee} GWEI`}
-            </BaseFeeTooltip>
+            {gasFeeEstimates?.estimatedBaseFee && (
+              <BaseFeeTooltip>{`${roundToDecimalPlacesRemovingExtraZeroes(
+                gasFeeEstimates?.estimatedBaseFee,
+                0,
+              )} GWEI`}</BaseFeeTooltip>
+            )}
           </span>
           <span className="network-statistics__info__field-label">
             <I18nValue messageKey="baseFee" />

@@ -547,6 +547,7 @@
         "@ethereumjs/common": true,
         "@ethereumjs/tx": true,
         "@metamask/contract-metadata": true,
+        "@metamask/metamask-eth-abis": true,
         "abort-controller": true,
         "async-mutex": true,
         "buffer": true,
@@ -565,7 +566,6 @@
         "ethjs-util": true,
         "events": true,
         "human-standard-collectible-abi": true,
-        "human-standard-multi-collectible-abi": true,
         "human-standard-token-abi": true,
         "immer": true,
         "isomorphic-fetch": true,
@@ -955,7 +955,10 @@
     },
     "abstract-leveldown": {
       "packages": {
+        "buffer": true,
+        "immediate": true,
         "is-buffer": true,
+        "level-supports": true,
         "process": true,
         "xtend": true
       }
@@ -3042,6 +3045,11 @@
         "xtend": true
       }
     },
+    "level-supports": {
+      "packages": {
+        "xtend": true
+      }
+    },
     "levelup": {
       "packages": {
         "assert": true,
@@ -3622,11 +3630,6 @@
         "crypto": true,
         "msCrypto": true,
         "navigator": true
-      }
-    },
-    "no-case": {
-      "packages": {
-        "lower-case": true
       }
     },
     "no-case": {

@@ -41,6 +41,7 @@ import TransactionDetail from '../../components/app/transaction-detail/transacti
 import TransactionDetailItem from '../../components/app/transaction-detail-item/transaction-detail-item.component';
 import InfoTooltip from '../../components/ui/info-tooltip/info-tooltip';
 import LoadingHeartBeat from '../../components/ui/loading-heartbeat';
+import GasDetailsItem from '../../components/app/gas-details-item';
 import GasTiming from '../../components/app/gas-timing/gas-timing.component';
 import LedgerInstructionField from '../../components/app/ledger-instruction-field';
 import MultiLayerFeeMessage from '../../components/app/multilayer-fee-message';
@@ -60,11 +61,7 @@ import {
 import Typography from '../../components/ui/typography/typography';
 import { MIN_GAS_LIMIT_DEC } from '../send/send.constants';
 
-import GasDetailsItem from './gas-details-item';
 import TransactionAlerts from './transaction-alerts';
-
-// eslint-disable-next-line prefer-destructuring
-const EIP_1559_V2_ENABLED = process.env.EIP_1559_V2;
 
 const renderHeartBeatIfNotInTest = () =>
   process.env.IN_TEST ? null : <LoadingHeartBeat />;
@@ -120,6 +117,7 @@ export default class ConfirmTransactionBase extends Component {
     onEdit: PropTypes.func,
     subtitleComponent: PropTypes.node,
     title: PropTypes.string,
+    image: PropTypes.string,
     type: PropTypes.string,
     getNextNonce: PropTypes.func,
     nextNonce: PropTypes.number,
@@ -145,6 +143,7 @@ export default class ConfirmTransactionBase extends Component {
     supportsEIP1559: PropTypes.bool,
     hardwareWalletRequiresConnection: PropTypes.bool,
     isMultiLayerFeeNetwork: PropTypes.bool,
+    eip1559V2Enabled: PropTypes.bool,
   };
 
   state = {
@@ -437,15 +436,6 @@ export default class ConfirmTransactionBase extends Component {
       return this.supportsEIP1559V2 ? (
         <GasDetailsItem
           key="gas_details"
-          hexMaximumTransactionFee={hexMaximumTransactionFee}
-          hexMinimumTransactionFee={hexMinimumTransactionFee}
-          maxFeePerGas={maxFeePerGas}
-          maxPriorityFeePerGas={maxPriorityFeePerGas}
-          supportsEIP1559={supportsEIP1559}
-          txData={txData}
-          useNativeCurrencyAsPrimaryCurrency={
-            useNativeCurrencyAsPrimaryCurrency
-          }
           userAcknowledgedGasMissing={userAcknowledgedGasMissing}
         />
       ) : (
@@ -621,7 +611,7 @@ export default class ConfirmTransactionBase extends Component {
                     <LoadingHeartBeat />
                     <strong key="editGasSubTextAmountLabel">
                       {t('editGasSubTextAmountLabel')}
-                    </strong>
+                    </strong>{' '}
                     {renderTotalMaxAmount()}
                   </div>
                 }
@@ -871,7 +861,7 @@ export default class ConfirmTransactionBase extends Component {
         value={hexTransactionAmount}
         type={PRIMARY}
         showEthLogo
-        ethLogoHeight="26"
+        ethLogoHeight="28"
         hideLabel
       />
     );
@@ -981,7 +971,7 @@ export default class ConfirmTransactionBase extends Component {
   }
 
   supportsEIP1559V2 =
-    EIP_1559_V2_ENABLED &&
+    this.props.eip1559V2Enabled &&
     this.props.supportsEIP1559 &&
     !isLegacyTransaction(this.props.txData);
 
@@ -1012,6 +1002,7 @@ export default class ConfirmTransactionBase extends Component {
       gasFeeIsCustom,
       nativeCurrency,
       hardwareWalletRequiresConnection,
+      image,
     } = this.props;
     const {
       submitting,
@@ -1068,6 +1059,7 @@ export default class ConfirmTransactionBase extends Component {
           showEdit={Boolean(onEdit)}
           action={functionType}
           title={title}
+          image={image}
           titleComponent={this.renderTitleComponent()}
           subtitleComponent={this.renderSubtitleComponent()}
           hideSubtitle={hideSubtitle}
