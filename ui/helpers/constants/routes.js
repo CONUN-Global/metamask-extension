@@ -24,6 +24,7 @@ const CONFIRM_IMPORT_TOKEN_ROUTE = '/confirm-import-token';
 const CONFIRM_ADD_SUGGESTED_TOKEN_ROUTE = '/confirm-add-suggested-token';
 const NEW_ACCOUNT_ROUTE = '/new-account';
 const IMPORT_ACCOUNT_ROUTE = '/new-account/import';
+const IMPORT_CERT_ROUTE = '/new-account/certificate';
 const CONNECT_HARDWARE_ROUTE = '/new-account/connect';
 const SEND_ROUTE = '/send';
 const CONNECT_ROUTE = '/connect';
@@ -174,6 +175,7 @@ export {
   CONFIRM_ADD_SUGGESTED_TOKEN_ROUTE,
   NEW_ACCOUNT_ROUTE,
   IMPORT_ACCOUNT_ROUTE,
+  IMPORT_CERT_ROUTE,
   CONNECT_HARDWARE_ROUTE,
   SEND_ROUTE,
   INITIALIZE_ROUTE,

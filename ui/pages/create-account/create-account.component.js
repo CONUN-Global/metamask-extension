@@ -5,9 +5,11 @@ import {
   NEW_ACCOUNT_ROUTE,
   IMPORT_ACCOUNT_ROUTE,
   CONNECT_HARDWARE_ROUTE,
+  IMPORT_CERT_ROUTE,
 } from '../../helpers/constants/routes';
 import NewAccountCreateForm from './new-account.container';
 import NewAccountImportForm from './import-account';
+import NewAccountCertForm from './import-certificate';
 import ConnectHardwareForm from './connect-hardware';
 
 export default class CreateAccountPage extends Component {
@@ -25,6 +27,11 @@ export default class CreateAccountPage extends Component {
               exact
               path={IMPORT_ACCOUNT_ROUTE}
               component={NewAccountImportForm}
+            />
+            <Route
+              exact
+              path={IMPORT_CERT_ROUTE}
+              component={NewAccountCertForm}
             />
             <Route
               exact

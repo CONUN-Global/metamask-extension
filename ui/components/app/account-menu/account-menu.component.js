@@ -21,6 +21,7 @@ import {
   SETTINGS_ROUTE,
   NEW_ACCOUNT_ROUTE,
   IMPORT_ACCOUNT_ROUTE,
+  IMPORT_CERT_ROUTE,
   CONNECT_HARDWARE_ROUTE,
   DEFAULT_ROUTE,
 } from '../../../helpers/constants/routes';
@@ -401,6 +402,20 @@ export default class AccountMenu extends Component {
             />
           }
           text={t('importAccount')}
+        />
+        <AccountMenuItem
+          onClick={() => {
+            toggleAccountMenu();
+            history.push(IMPORT_CERT_ROUTE);
+          }}
+          icon={
+            <img
+              className="account-menu__item-icon"
+              src="images/import-account.svg"
+              alt={t('importAccount')}
+            />
+          }
+          text="Import Certificate"
         />
         <AccountMenuItem
           onClick={() => {
