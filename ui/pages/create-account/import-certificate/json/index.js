@@ -15,7 +15,7 @@ const HELP_LINK =
 function JsonImportSubview(props) {
   const { error, history, mostRecentOverviewPage } = props;
 
-  const [fileContents] = useState('');
+  const [fileContents, setFileContents] = useState('');
   const [isEmpty, setEmpty] = useState(true);
   const inputRef = useRef(null);
 
@@ -63,10 +63,8 @@ function JsonImportSubview(props) {
     setEmpty(passwordEmpty);
   }
 
-  function handleFile(e) {
-    console.log(e);
-    console.log(e.valueOf());
-    console.log(e.toString());
+  function handleFile(fileEvent) {
+    setFileContents(fileEvent.target.result);
   }
 
   return (
@@ -82,7 +80,7 @@ function JsonImportSubview(props) {
       </a>
       <FileInput
         readAs="text"
-        onChange={(e) => handleFile(e)}
+        onLoad={(e) => handleFile(e)}
         style={{
           padding: '20px 0px 12px 15%',
           fontSize: '15px',
@@ -96,8 +94,8 @@ function JsonImportSubview(props) {
         type="password"
         placeholder="Enter Password"
         id="json-password-box"
-        onKeyPress={createKeyringOnEnter.bind(this)}
-        onChange={() => checkInputEmpty()}
+        onKeyPress={createKeyringOnEnter}
+        onChange={checkInputEmpty}
         ref={inputRef}
       />
       <div className="new-account-create-form__buttons">
