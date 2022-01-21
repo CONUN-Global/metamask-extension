@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'redux';
@@ -12,152 +12,117 @@ import { getMostRecentOverviewPage } from '../../../../ducks/history/history';
 const HELP_LINK =
   'https://metamask.zendesk.com/hc/en-us/articles/360015489331-Importing-an-Account';
 
-class JsonImportSubview extends Component {
-  state = {
-    fileContents: '',
-    isEmpty: true,
-  };
+function JsonImportSubview(props) {
+  const { error, history, mostRecentOverviewPage } = props;
 
-  inputRef = React.createRef();
+  const [fileContents] = useState('');
+  const [isEmpty, setEmpty] = useState(true);
+  const inputRef = useRef(null);
 
-  render() {
-    const { error, history, mostRecentOverviewPage } = this.props;
-    const enabled = !this.state.isEmpty && this.state.fileContents !== '';
-
-    return (
-      <div className="new-account-import-form__json">
-        <p>{this.context.t('usedByClients')}</p>
-        <a
-          className="warning"
-          href={HELP_LINK}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {this.context.t('fileImportFail')}
-        </a>
-        <FileInput
-          readAs="text"
-          onLoad={this.onLoad.bind(this)}
-          style={{
-            padding: '20px 0px 12px 15%',
-            fontSize: '15px',
-            display: 'flex',
-            justifyContent: 'center',
-            width: '100%',
-          }}
-        />
-        <input
-          className="new-account-import-form__input-password"
-          type="password"
-          placeholder={this.context.t('enterPassword')}
-          id="json-password-box"
-          onKeyPress={this.createKeyringOnEnter.bind(this)}
-          onChange={() => this.checkInputEmpty()}
-          ref={this.inputRef}
-        />
-        <div className="new-account-create-form__buttons">
-          <Button
-            type="secondary"
-            large
-            className="new-account-create-form__button"
-            onClick={() => history.push(mostRecentOverviewPage)}
-          >
-            {this.context.t('cancel')}
-          </Button>
-          <Button
-            type="primary"
-            large
-            className="new-account-create-form__button"
-            onClick={() => this.createNewKeychain()}
-            disabled={!enabled}
-          >
-            {this.context.t('import')}
-          </Button>
-        </div>
-        {error ? <span className="error">{error}</span> : null}
-      </div>
-    );
-  }
-
-  onLoad(event) {
-    this.setState({
-      fileContents: event.target.result,
-    });
-  }
-
-  createKeyringOnEnter(event) {
+  function createKeyringOnEnter(event) {
     if (event.key === 'Enter') {
       event.preventDefault();
-      this.createNewKeychain();
+      createNewKeychain();
     }
   }
 
-  createNewKeychain() {
+  function createNewKeychain() {
     const {
       firstAddress,
       displayWarning,
-      history,
       importNewJsonAccount,
-      mostRecentOverviewPage,
       setSelectedAddress,
-    } = this.props;
-    const { fileContents } = this.state;
-    const { t } = this.context;
-
+    } = props;
     if (!fileContents) {
-      const message = t('needImportFile');
+      const message = 'Need To Import File';
       displayWarning(message);
       return;
     }
 
-    const password = this.inputRef.current.value;
+    const password = inputRef.current.value;
 
     importNewJsonAccount([fileContents, password])
       .then(({ selectedAddress }) => {
         if (selectedAddress) {
           history.push(mostRecentOverviewPage);
-          this.context.metricsEvent({
-            eventOpts: {
-              category: 'Accounts',
-              action: 'Import Account',
-              name: 'Imported Account with JSON',
-            },
-          });
           displayWarning(null);
         } else {
-          displayWarning(t('importAccountError'));
-          this.context.metricsEvent({
-            eventOpts: {
-              category: 'Accounts',
-              action: 'Import Account',
-              name: 'Error importing JSON',
-            },
-          });
+          displayWarning('Error Importing Account');
           setSelectedAddress(firstAddress);
         }
       })
       .catch((err) => err && displayWarning(err.message || err));
   }
 
-  checkInputEmpty() {
-    const password = this.inputRef.current.value;
-    let isEmpty = true;
+  function checkInputEmpty() {
+    const password = inputRef.current.value;
+    let passwordEmpty = true;
     if (password !== '') {
-      isEmpty = false;
+      passwordEmpty = false;
     }
-    this.setState({ isEmpty });
+    setEmpty(passwordEmpty);
   }
-}
 
-JsonImportSubview.propTypes = {
-  error: PropTypes.string,
-  displayWarning: PropTypes.func,
-  firstAddress: PropTypes.string,
-  importNewJsonAccount: PropTypes.func,
-  history: PropTypes.object,
-  setSelectedAddress: PropTypes.func,
-  mostRecentOverviewPage: PropTypes.string.isRequired,
-};
+  function handleFile(e) {
+    console.log(e);
+    console.log(e.valueOf());
+    console.log(e.toString());
+  }
+
+  return (
+    <div className="new-account-import-form__json">
+      <p>Used By Clients</p>
+      <a
+        className="warning"
+        href={HELP_LINK}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        File Import Fail
+      </a>
+      <FileInput
+        readAs="text"
+        onChange={(e) => handleFile(e)}
+        style={{
+          padding: '20px 0px 12px 15%',
+          fontSize: '15px',
+          display: 'flex',
+          justifyContent: 'center',
+          width: '100%',
+        }}
+      />
+      <input
+        className="new-account-import-form__input-password"
+        type="password"
+        placeholder="Enter Password"
+        id="json-password-box"
+        onKeyPress={createKeyringOnEnter.bind(this)}
+        onChange={() => checkInputEmpty()}
+        ref={inputRef}
+      />
+      <div className="new-account-create-form__buttons">
+        <Button
+          type="secondary"
+          large
+          className="new-account-create-form__button"
+          onClick={() => history.push(mostRecentOverviewPage)}
+        >
+          Cancel
+        </Button>
+        <Button
+          type="primary"
+          large
+          className="new-account-create-form__button"
+          onClick={() => createNewKeychain()}
+          disabled={!isEmpty && fileContents !== ''}
+        >
+          Import
+        </Button>
+      </div>
+      {error ? <span className="error">{error}</span> : null}
+    </div>
+  );
+}
 
 const mapStateToProps = (state) => {
   return {
@@ -177,9 +142,14 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-JsonImportSubview.contextTypes = {
-  t: PropTypes.func,
-  metricsEvent: PropTypes.func,
+JsonImportSubview.propTypes = {
+  error: PropTypes.string,
+  displayWarning: PropTypes.func,
+  firstAddress: PropTypes.string,
+  importNewJsonAccount: PropTypes.func,
+  history: PropTypes.object,
+  setSelectedAddress: PropTypes.func,
+  mostRecentOverviewPage: PropTypes.string.isRequired,
 };
 
 export default compose(
