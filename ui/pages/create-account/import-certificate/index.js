@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Dropdown from '../../../components/ui/dropdown/dropdown';
 
 import JsonImportView from './json';
-import PrivateKeyImportView from './private-key/private-key';
+import PrivateKeyImportView from './private-key';
 
 const menuItems = [
   {

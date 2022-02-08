@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
 import * as Sentry from '@sentry/browser';
+import { QueryClientProvider } from 'react-query';
 import { I18nProvider, LegacyI18nProvider } from '../contexts/i18n';
 import {
   MetaMetricsProvider,
@@ -12,6 +13,7 @@ import {
   MetaMetricsProvider as NewMetaMetricsProvider,
   LegacyMetaMetricsProvider as NewLegacyMetaMetricsProvider,
 } from '../contexts/metametrics.new';
+import { queryClient } from '../../query-config/config';
 import ErrorPage from './error';
 import Routes from './routes';
 
@@ -43,23 +45,25 @@ class Index extends PureComponent {
     }
 
     return (
-      <Provider store={store}>
-        <HashRouter hashType="noslash">
-          <MetaMetricsProvider>
-            <LegacyMetaMetricsProvider>
-              <NewMetaMetricsProvider>
-                <NewLegacyMetaMetricsProvider>
-                  <I18nProvider>
-                    <LegacyI18nProvider>
-                      <Routes />
-                    </LegacyI18nProvider>
-                  </I18nProvider>
-                </NewLegacyMetaMetricsProvider>
-              </NewMetaMetricsProvider>
-            </LegacyMetaMetricsProvider>
-          </MetaMetricsProvider>
-        </HashRouter>
-      </Provider>
+      <QueryClientProvider client={queryClient}>
+        <Provider store={store}>
+          <HashRouter hashType="noslash">
+            <MetaMetricsProvider>
+              <LegacyMetaMetricsProvider>
+                <NewMetaMetricsProvider>
+                  <NewLegacyMetaMetricsProvider>
+                    <I18nProvider>
+                      <LegacyI18nProvider>
+                        <Routes />
+                      </LegacyI18nProvider>
+                    </I18nProvider>
+                  </NewLegacyMetaMetricsProvider>
+                </NewMetaMetricsProvider>
+              </LegacyMetaMetricsProvider>
+            </MetaMetricsProvider>
+          </HashRouter>
+        </Provider>
+      </QueryClientProvider>
     );
   }
 }
