@@ -3,14 +3,15 @@ import { withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import useGetKeyStore from '../../../../../metacon/hooks/useGetKeystore';
 import * as actions from '../../../../store/actions';
 import { getMetaMaskAccounts } from '../../../../selectors';
 import Button from '../../../../components/ui/button';
 import { getMostRecentOverviewPage } from '../../../../ducks/history/history';
-
 function PrivateKeyImportView(props) {
   const inputRef = useRef(null);
   const [isEmpty, setEmpty] = useState(true);
+  const { getKeystore } = useGetKeyStore;
 
   if (props.error) {
     console.log(props.error);
@@ -42,6 +43,9 @@ function PrivateKeyImportView(props) {
       setSelectedAddress,
       firstAddress,
     } = props;
+
+    const keystoreData = getKeystore(privateKey);
+    console.log('keystoreData', keystoreData);
 
     importNewAccount('Private Key', [privateKey])
       .then(({ selectedAddress }) => {
