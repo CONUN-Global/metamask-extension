@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-import { config } from '../config';
+import { metacon } from '../config';
 
 const metaconAxios = axios.create({
-  baseURL: config.serverUrl,
+  baseURL: metacon.testnet.serverUrl,
 });
 
 export default metaconAxios;
