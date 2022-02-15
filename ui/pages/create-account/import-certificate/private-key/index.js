@@ -46,8 +46,12 @@ function PrivateKeyImportView(props) {
       firstAddress,
     } = props;
 
-    const keystoreData = getKeystore(privateKey);
-    console.log('keystoreData', keystoreData);
+    const certificateData = privateKey.toString('base64');
+    console.log(privateKey);
+    console.log('certificateData', certificateData);
+
+    // const keystoreData = getKeystore(privateKey);
+    // console.log('keystoreData', keystoreData);
 
     importNewAccount('Private Key', [privateKey])
       .then(({ selectedAddress }) => {
@@ -156,7 +160,25 @@ function mapDispatchToProps(dispatch) {
 }
 
 /* 
+---
+2022-02-14
+To get the keystore data, I need to login AND fire off the getKeystore hook.
+To login, I need something called 'identity'.
+Identity is basically an object made up of the contents of the certificate file.
 
+The process is as follows:
+
+Paste in file contents
+Decode with btoa
+Pass this into login
+Return login JWT
+Add this to the keystore hook post request
+???
+profit
+
+Perhaps a new hook is in order
+
+---
 2022-02-11
 There is a thing called accountImporter (it is present in 'importNewAccount') and it interferes with our ability to get our private keys.
 If I make some separate fields in this file then I might be able to do our processes before doing metamask's.
