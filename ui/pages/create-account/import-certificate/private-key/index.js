@@ -3,15 +3,17 @@ import { withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import useGetKeyStore from '../../../../../metacon/hooks/useGetKeystore';
+import useGetKeystore from '../../../../../metacon/hooks/useGetKeystore';
 import * as actions from '../../../../store/actions';
 import { getMetaMaskAccounts } from '../../../../selectors';
 import Button from '../../../../components/ui/button';
 import { getMostRecentOverviewPage } from '../../../../ducks/history/history';
+
 function PrivateKeyImportView(props) {
   const inputRef = useRef(null);
+  const ourInputRef = useRef(null);
   const [isEmpty, setEmpty] = useState(true);
-  const { getKeystore } = useGetKeyStore;
+  const { getKeystore } = useGetKeystore();
 
   if (props.error) {
     console.log(props.error);
@@ -60,6 +62,12 @@ function PrivateKeyImportView(props) {
       .catch((err) => err && displayWarning(err.message || err));
   }
 
+  function getMetaconCertificateDetails() {
+    getKeystore().then((res) => {
+      console.log('Keystore', res);
+    });
+  }
+
   return (
     <div className="new-account-import-form__private-key">
       <span className="new-account-create-form__instruction">
@@ -73,6 +81,14 @@ function PrivateKeyImportView(props) {
           onKeyPress={(e) => createKeyringOnEnter(e)}
           onChange={checkInputEmpty}
           ref={inputRef}
+          autoFocus
+        />
+        <input
+          className="new-account-import-form__input-password"
+          type="password"
+          id="private-key-box"
+          onChange={checkInputEmpty}
+          ref={ourInputRef}
           autoFocus
         />
       </div>
@@ -93,7 +109,7 @@ function PrivateKeyImportView(props) {
           type="primary"
           large
           className="new-account-create-form__button"
-          onClick={createNewKeychain}
+          onClick={getMetaconCertificateDetails}
           disabled={isEmpty}
         >
           Import
@@ -138,3 +154,11 @@ function mapDispatchToProps(dispatch) {
       dispatch(actions.setSelectedAddress(address)),
   };
 }
+
+/* 
+
+2022-02-11
+There is a thing called accountImporter (it is present in 'importNewAccount') and it interferes with our ability to get our private keys.
+If I make some separate fields in this file then I might be able to do our processes before doing metamask's.
+
+*/

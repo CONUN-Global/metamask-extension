@@ -1,4 +1,8 @@
-import Web3 from 'web3';
-import { metacon } from '../const';
-
-export const web3 = new Web3(metacon.testnet.web3Url);
+export const metacon = {
+  testnet: {
+    web3Url: 'https://ropsten.infura.io/v3/2b1758a74cf249a598f13e357bb058dc',
+    serverUrl: 'http://192.168.100.202:80/api/v1/',
+  },
+  org: 'Org1',
+  walletType: 'ETH',
+};

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { metacon } from '../const';
+import { metacon } from '../config';
 
 const metaconAxios = axios.create({
   baseURL: metacon.testnet.serverUrl,
